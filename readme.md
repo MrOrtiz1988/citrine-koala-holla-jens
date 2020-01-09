@@ -40,7 +40,7 @@ Upon completion of the project you'll need to provide not only the source (via G
 
 1. Ability to delete a specific Koala from the database.  
 2. Confirmation dialog before deleting (research SweetAlert).
-3. Ability to toggle the display of Koalas ready for transfer.
+3. Ability to make koalas toggle between ready for transfer and NOT ready for transfer.
 4. Add form validation, additional styling and a README.md.
 5. Client side filtering with a text box
 6. Ability to edit other information (Name, Age, Notes) for existing Koalas in the db.
