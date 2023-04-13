@@ -1,7 +1,7 @@
 {
   "name": "koalla_holla",
   "version": "1.0.0",
-  "description": "",
+  "description": "**PLEASE \"Use Template\" for this assignment! Don't Fork it.**",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,6 +10,8 @@
   "author": "@devjana",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
-  }
+    "express": "^4.18.2",
+    "pg": "^8.10.0"
+  },
+  "keywords": []
 }
