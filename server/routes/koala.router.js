@@ -2,11 +2,11 @@ const express = require('express');
 const koalaRouter = express.Router();
 
 // DB CONNECTION
-const pool = require('./modules/pool.js');
+const pool = require('../modules/pool.js');
 
 // GET
-app.get('/koalas', (req, res) => {
-    console.log('GET /creatures');
+koalaRouter.get('/', (req, res) => {
+    console.log('GET /koalas');
     
     let sqlText = 'SELECT * FROM "koalas";';
   
@@ -25,25 +25,28 @@ app.get('/koalas', (req, res) => {
   })
 
 // POST
-app.post('/creatures', (req, res) => {
-    console.log('POST /creatures');
+koalaRouter.post('/', (req, res) => {
+    console.log('POST /koalas');
     console.log('here is the data we got mailed:', req.body);
   
-    let creatureName = req.body.name;
-    let creatureType = req.body.type;
+    let koalaName = req.body.name;
+    let koalaAge = req.body.age;
+    let koalaGender = req.body.gender;
+    let koalareadyForTransfer = req.body.ready_to_transfer;
+    let koalaNotes = req.body.notes;
   
     let sqlText = `
       INSERT INTO "koalas"
-        ("name", "type")
+        ("name", "age", "gender", "ready_to_transfer", "notes" )
         VALUES
         ($1, $2, $3, $4, $5);
     `;
-    let sqlValues = [KoalaName, ]
+    let sqlValues = [koalaName, koalaAge, koalaGender, koalareadyForTransfer, koalaNotes]
     
    
     pool.query(sqlText, sqlValues)
       .then((dbRes) => {
-       
+        console.log('New Koala was added!')
         res.sendStatus(201);
       })
       .catch((dbErr) => {
@@ -53,21 +56,20 @@ app.post('/creatures', (req, res) => {
   })
 
 // PUT
-app.put('/koalas/:id', (req, res) => {
-    // Get the id of the creature we'd like to update:
-      // req.params looks like: { id: '3' }
+koalaRouter.put('/:id', (req, res) => {
+    
     let theIdToUpdate = req.params.id;
-  
-    // Get the new type value:
-      // req.body looks like: { type: 'Digidog' }
-    let newType = req.body.type;
-  
+    console.log('here is our id', req.params.id);
+    
+    let newreadyForTransfer = req.body.ready_to_transfer;
+    console.log('HEY LOOOOK AT MEEE', newreadyForTransfer);
+
     let sqlText = `
       UPDATE "koalas"
-        SET "type"=$1
+        SET "ready_to_transfer"=$1
         WHERE "id"=$2;
     `
-    let sqlValues = [newType, theIdToUpdate];
+    let sqlValues = [newreadyForTransfer, theIdToUpdate];
   
     pool.query(sqlText, sqlValues)
       .then((dbRes) => {
@@ -82,7 +84,7 @@ app.put('/koalas/:id', (req, res) => {
   })
 
 // DELETE
-app.delete('/koalas/:id', (req, res) => {
+koalaRouter.delete('/:id', (req, res) => {
     console.log(req.params);
   
     let theIdToDelete = req.params.id;

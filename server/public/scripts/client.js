@@ -3,11 +3,11 @@ console.log( 'js' );
 $( document ).ready( function(){
   console.log( 'JQ' );
   // Establish Click Listeners
-  setupClickListeners()
+  setupClickListeners();
   // load existing koalas on page load
-  getKoalas();
-  deleteKoalas();
-  updateKoalas();
+  renderKoala();
+  // deleteKoalas();
+ 
 }); // end doc ready
 
 function setupClickListeners() {
@@ -17,44 +17,45 @@ function setupClickListeners() {
     // NOT WORKING YET :(
     // using a test object
     let koalaToSend = {
-      name: 'testName',
-      age: 'testName',
-      gender: 'testName',
-      readyForTransfer: 'testName',
-      notes: 'testName',
+      name: $('#nameIn').val(),
+      age: $('#ageIn').val(),
+      gender: $('#genderIn').val(),
+      ready_to_transfer: $('#readyForTransferIn').val(),
+      notes: $('#notesIn').val(),
     };
+
+    console.log('THIS IS AS IT IS BUILT');
+    console.log(koalaToSend)
     // call saveKoala with the new obejct
-    saveKoala( koalaToSend );
+    newKoala( koalaToSend );
   }); 
+
+  $("#viewKoalas").on('click', '.ready-for-transfer-btn', updateKoalas);
+  $("#viewKoalas").on('click', '.delete-btn', deleteKoalas);
 }
 
-function getKoalas(){
-  console.log( 'in getKoalas' );
+function newKoala(koalaToSend){
+  console.log('THIS IS THE KOALA');
   // ajax call to server to get koalas
 
  $.ajax({
   method: 'POST',
   url: '/koalas',
-  data: {
-   name: koalaToSend.name,
-   age: koalaToSend.age,
-   gender: koalaToSend.gender,
-   readyForTransfer: koalaToSend.readyForTransfer,
-   notes: koalaToSend.notes
- }
+  data: koalaToSend
   }).then(function(response) {
-    saveKoala();
+    renderKoala();
   })
 }; 
 // end getKoalas
 
-function saveKoala( newKoala ){
-  console.log( 'in saveKoala', newKoala );
+function renderKoala(){
+
   // ajax call to server to get koalas
   $.ajax({
     method: 'GET',
     url: '/koalas',
   }).then(function(koalas) {
+    console.log(koalas);
     $('#viewKoalas').empty();
     for(let koala of koalas){
       $('#viewKoalas').append( `
@@ -62,10 +63,10 @@ function saveKoala( newKoala ){
     <td>${koala.name}</td>
     <td>${koala.age}</td>
     <td>${koala.gender}</td>
-    <td>${koala.readyForTransfer}</td>
+    <td>${koala.ready_to_transfer}</td>
+    <td>$${koala.notes}</td>
     <td align="center"><button class="ready-for-transfer-btn">"Ready for Transfer"</button></td>
     <td align="center"><button class="delete-btn">Delete</button></td>
-    <td>$ ${koala.notes}</td>
 </tr>
       `);
     }
@@ -73,12 +74,13 @@ function saveKoala( newKoala ){
 }
 
 function deleteKoalas() {
-  let idToDelete = $(this).parent().data('id');
+  let idToDelete = $(this).parent().parent().data('id');
+  console.log(idToDelete)
   $.ajax({
     method: 'DELETE',
     url: `/koalas/${idToDelete}`
   }).then(function(response) {
-    saveKoala();
+    renderKoala();
 }).catch(function(error) {
     alert('something broke');
   });
@@ -86,16 +88,16 @@ function deleteKoalas() {
 
 function updateKoalas() {
 
-let idToUpdate = $(this).parent().data('id');
-
+let idToUpdate = $(this).parent().parent().data('id');
+console.log(idToUpdate);
 $.ajax({
   method: 'PUT',
   url: `/koalas/${idToUpdate}`,
   data: {
-    // what data are we changing 
+      readyForTransfer: 'Y'
   }
 }).then(function(response) {
-  saveKoala();
+  renderKoala();
 }).catch(function(error) {
   console.log('uh oh. updateToDigidog fail:', error);
 });
